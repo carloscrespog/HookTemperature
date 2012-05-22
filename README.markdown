@@ -4,4 +4,4 @@
 
 Introduction
 ---------------------
-A hook for handling renfe's querys
+A hook for retrieving weather conditions
