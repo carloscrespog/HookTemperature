@@ -1,9 +1,38 @@
 #!/usr/bin/env node
 
-var HookTemperature = require('../lib/hookTemperature').HookTemperature;
+var HookTemperature = require('../lib/hookTemperature').HookTemperature,
+	jsdom = require("jsdom");
 
-var hookTemperature = new HookTemperature({ 
+var hookTemperature = new HookTemperature({
   name: 'the-hookTemperature'
 });
+var temperature,humidity,wind;
+hookTemperature.on('*::temperature',function(data){
+	jsdom.env("http://www.tiempo.com/situacion_actual/madrid-barajas.htm", [
+			'http://code.jquery.com/jquery-1.5.min.js'
+			],
+			function(errors, window) {
 
+				var $ = window.$;
+				var i=0;
+				$(".sa_cabecera_izq_dato").each(function(){
+					if(i===0){
+						temperature=$(this).text();
+						console.log("Temperatura: "+temperature);
+						i++;
+					}else{
+						humidity=$(this).text();
+						console.log("Humedad: "+humidity);
+					}
+					
+				});
+				$(".sa_cabecera_izq_dato2").each(function(){
+
+					wind=$(this).text();
+					console.log("Humedad: "+wind);
+				});
+				hookTemperature.emit('hookTemperature::data',{"temperature":temperature,"humidity":humidity,"wind":wind});
+
+			});
+	});
 hookTemperature.start();
