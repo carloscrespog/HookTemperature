@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var HookTemperature = require('../lib/hookTemperature').HookTemperature;
+
+var hookTemperature = new HookTemperature({ 
+  name: 'the-hookTemperature'
+});
+
+hookTemperature.start();
